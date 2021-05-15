@@ -1,8 +1,6 @@
 FROM python:3.8-alpine
 
-RUN adduser -D ldap
-
-WORKDIR /home/ldap
+WORKDIR /glauthui
 
 COPY requirements.txt requirements.txt
 RUN python -m venv venv
@@ -14,14 +12,11 @@ COPY migrations migrations
 COPY ldap.py config.py boot.sh ./
 RUN set -x \
  && chmod +x boot.sh \
- && mkdir -p /home/ldap/db \
- && chown -R ldap:ldap ./
+ && mkdir -p /glauthui/db
 
 ENV FLASK_APP ldap.py
 
-USER ldap
-
-VOLUME ["/home/ldap/db"]
+VOLUME ["/glauthui/db"]
 
 EXPOSE 5000
 ENTRYPOINT ["./boot.sh"]
